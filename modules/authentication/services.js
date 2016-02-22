@@ -11,21 +11,26 @@ angular.module('Authentication')
 
             /* Dummy authentication for testing, uses $timeout to simulate api call
              ----------------------------------------------*/
-            $timeout(function () {
+            /*$timeout(function () {
                 var response = { success: username === 'test' && password === 'test' };
                 if (!response.success) {
                     response.message = 'Username or password is incorrect';
                 }
                 callback(response);
-            }, 1000);
+            }, 1000);*/
 
 
             /* Use this for real authentication
              ----------------------------------------------*/
-            //$http.post('/api/authenticate', { username: username, password: password })
-            //    .success(function (response) {
-            //        callback(response);
-            //    });
+            //console.log(username)
+            //console.log(password)
+             
+            //$http.defaults.headers.common = {"Access-Control-Request-Headers": "accept, origin, authorization"};
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + password); // jshint ignore:line
+            $http.get("http://127.0.0.1:5000/login", { username: username, password: password })
+                .success(function (data,status,headers,config) {
+                    callback(data,status);
+                });
 
         };
 
@@ -35,10 +40,11 @@ angular.module('Authentication')
             $rootScope.globals = {
                 currentUser: {
                     username: username,
+                    password:password,
                     authdata: authdata
                 }
             };
-
+			$http.defaults.headers.common = {"Access-Control-Request-Headers": "accept, origin, authorization"}; 
             $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata; // jshint ignore:line
             $cookieStore.put('globals', $rootScope.globals);
         };
@@ -46,6 +52,7 @@ angular.module('Authentication')
         service.ClearCredentials = function () {
             $rootScope.globals = {};
             $cookieStore.remove('globals');
+            $http.defaults.headers.common = {"Access-Control-Request-Headers": "accept, origin, authorization"}; 
             $http.defaults.headers.common.Authorization = 'Basic ';
         };
 

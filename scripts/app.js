@@ -11,8 +11,9 @@ angular.module('BasicHttpAuthExample', [
     'ngCookies'
 ])
 
-.config(['$routeProvider', function ($routeProvider) {
-
+.config(['$routeProvider','$httpProvider', function ($routeProvider,$httpProvider) {
+	$httpProvider.defaults.useXDomain = true;
+    //delete $httpProvider.defaults.headers.common['X-Requested-With'];
     $routeProvider
         .when('/login', {
             controller: 'LoginController',
@@ -25,12 +26,17 @@ angular.module('BasicHttpAuthExample', [
         })
 
         .otherwise({ redirectTo: '/login' });
+        
+        
 }])
+
+
 
 .run(['$rootScope', '$location', '$cookieStore', '$http',
     function ($rootScope, $location, $cookieStore, $http) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
+        console.log($rootScope.globals.currentUser)
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
         }

@@ -1,3 +1,65 @@
-﻿<h1>Home</h1>
+﻿
+		<h1>Home</h1>
 <p>You're logged in!!</p>
+<p>{{$scope.test.currentUser}}</p>
 <p><a href="#/login">Logout</a></a></p>
+
+
+<script src="modules/home/matches.js"></script>
+
+			<div class ="table">
+				<table border="1">
+					<tr>
+						<th> Spelare</th>
+						<th>Poäng</th>
+					</tr>
+					<tr ng-repeat="data in table.table | orderBy:'-points'">
+						<td>{{data.user}}</td>
+						<td>{{data.points}}</td>
+				</table>
+			</div>
+			<div class = "bets">
+				<table border = "1">
+					<tr>
+						<th>Match</th>
+						<th>Resultat</th>
+						<th ng-repeat="user in bets[0].users"> {{user.user}}</th>
+					</tr>
+					<tr ng-repeat="a in bets">
+						<td>{{a.HomeTeam}}-{{a.AwayTeam}}</td>
+						<td>{{a.result}}</td>
+						<td ng-repeat="user in a.users" class="point{{user.point}}"> {{user.bet}}</td>
+						<!--div>{{user.bet}} </div> <div>{{user.point}} </div></td-->
+
+				</table>
+
+			</div>
+
+			<div class = "matches">
+				<table border ="1">
+
+					<tr ng-repeat="a in matches.matches">
+						<td>{{a[3]}}</td>
+						<td>{{a[1]}}</td>
+						<td>-</td>
+						<td>{{a[2]}}</td>
+						<td>{{a[4]}}</td>
+
+				</table>
+			</div>
+			
+			<div class = "Bets">
+				<table border ="1">
+					<div ng-repeat="a in mybets">
+            			<label id = "match">{{a.HomeTeam}}-{{a.AwayTeam}}</label>
+            			<input type="text" ng-model=a.bet id = "resultat">
+            			<button ng-click="placeBet($index)">Spara</button>
+        			</div>
+					
+			</div>
+			
+
+			
+	
+		
+
