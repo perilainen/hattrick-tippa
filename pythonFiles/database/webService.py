@@ -118,6 +118,20 @@ def index():
     return resp
 
 
+@app.route('/SetPassword/<string:user>/<string:newpass>', methods = ['PUT'])
+@crossdomain(origin='*',headers='authorization')
+@auth.login_required
+def setPass(user, newpass):
+    sql_command = "UPDATE users SET password = ? WHERE user = ?"
+    params = ([newpass, user])
+    conn = sqlite3.connect(databasesetting.db_path)
+    conn.execute(sql_command,params)
+    conn.commit()
+    conn.close()
+    resp = Response("Password set")
+    return resp
+
+
 
 @app.route('/table', methods = ['GET'])
 @crossdomain(origin='*',headers='authorization')
