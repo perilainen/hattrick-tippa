@@ -135,7 +135,7 @@ def setPass(user, newpass):
 
 @app.route('/table', methods = ['GET'])
 @crossdomain(origin='*',headers='authorization')
-@auth.login_required
+
 def getTable():
     matches = getMatches()
     matchesjson =  json.loads(matches.data)['matches']

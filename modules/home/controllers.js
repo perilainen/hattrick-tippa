@@ -124,9 +124,9 @@ home.factory('dataService', function($http,Base64){
 	return{
 		gettable:function(){
 		//return {"table":{"pe":0}};
-		$http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode('per' + ':' + 'per');
+		$http.defaults.headers.common['Authorization'] = 'Basic ';
     	
-		return $http.get("http://127.0.0.1:5000/table",{username:"per",password:"per"});
+		return $http.get("http://127.0.0.1:5000/table");
 		}
 	};	
 });
