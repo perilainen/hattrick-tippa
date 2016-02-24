@@ -27,7 +27,7 @@ angular.module('Authentication')
              
             //$http.defaults.headers.common = {"Access-Control-Request-Headers": "accept, origin, authorization"};
             $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + password); // jshint ignore:line
-            $http.get("http://127.0.0.1:5000/login", { username: username, password: password })
+            $http.get("/api/login", { username: username, password: password })
                 .success(function (data,status,headers,config) {
                     callback(data,status);
                 });

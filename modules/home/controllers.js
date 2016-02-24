@@ -27,7 +27,7 @@ home.controller('HomeController',function ($scope, $cookieStore, dataService,mat
     $scope.placeBet = function(index){
     	console.log(this.mybets[index][1])
     	$http.defaults.headers.common.Authorization = 'Basic ';
-    	resp = $http.put("http://127.0.0.1:5000/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet)
+    	resp = $http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet)
     	console.log(resp)
     	
     };
@@ -126,7 +126,7 @@ home.factory('dataService', function($http,Base64){
 		//return {"table":{"pe":0}};
 		$http.defaults.headers.common['Authorization'] = 'Basic ';
     	
-		return $http.get("http://127.0.0.1:5000/table");
+		return $http.get("/api/table");
 		}
 	};	
 });
@@ -135,7 +135,7 @@ home.factory('matchService', function($http){
 	return{
 		getmatches:function(){
 			$http.defaults.headers.common.Authorization = 'Basic ';
-			return $http.get("http://127.0.0.1:5000/matches");
+			return $http.get("/api/matches");
 		}
 	};
 });
@@ -144,7 +144,7 @@ home.factory('betService',function($http){
 	return{
 		getbets:function(){
 			$http.defaults.headers.common.Authorization = 'Basic ';
-			return $http.get("http://127.0.0.1:5000/officialBets");
+			return $http.get("/api/officialBets");
 		}
 		
 	};
@@ -157,7 +157,7 @@ home.factory('myBetService',function($http,Base64){
 			$http.defaults.headers.common.Authorization = 'Basic ' + user.currentUser.authdata;//Base64.encode('per' + ':' + 'per');
 			
 			//return $http.get("http://127.0.0.1:5000/table");
-			return $http.get("http://127.0.0.1:5000/getBets/"+user.currentUser.username);
+			return $http.get("/api/getBets/"+user.currentUser.username);
 			
 		}
 	};

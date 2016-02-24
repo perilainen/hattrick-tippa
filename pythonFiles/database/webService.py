@@ -65,7 +65,9 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
-@app.route('/matches', methods=['GET','OPTIONS'])
+    
+
+@app.route('/api/matches', methods=['GET','OPTIONS'])
 @crossdomain(origin='*',headers='authorization')
 def getMatches():
     conn = sqlite3.connect(databasesetting.db_path)
@@ -109,7 +111,7 @@ def get_pw(username):
 
     return None
 
-@app.route('/login',methods = ['GET'])
+@app.route('/api/login',methods = ['GET'])
 @crossdomain(origin='*',headers='authorization')
 @auth.login_required
 def index():
@@ -118,7 +120,7 @@ def index():
     return resp
 
 
-@app.route('/SetPassword/<string:user>/<string:newpass>', methods = ['PUT'])
+@app.route('/api/SetPassword/<string:user>/<string:newpass>', methods = ['PUT'])
 @crossdomain(origin='*',headers='authorization')
 @auth.login_required
 def setPass(user, newpass):
@@ -133,7 +135,7 @@ def setPass(user, newpass):
 
 
 
-@app.route('/table', methods = ['GET'])
+@app.route('/api/table', methods = ['GET'])
 @crossdomain(origin='*',headers='authorization')
 
 def getTable():
@@ -165,6 +167,7 @@ def getTable():
 
 def getPlayedMatches():
     date =  datetime.datetime.now()
+    #date =  datetime.datetime.now()+datetime.timedelta(days=7)
     sql_command = '''SELECT * FROM matches WHERE matchDate < ?'''
     params = ([date])
     conn = sqlite3.connect(databasesetting.db_path)
@@ -172,7 +175,7 @@ def getPlayedMatches():
     return resp.fetchall()
 
 
-@app.route('/officialBets',methods = ['GET'])
+@app.route('/api/officialBets',methods = ['GET'])
 @crossdomain(origin='*',headers='authorization')
 def getOfficialBets():
     #test#"2017-01-01 01:00:00"
@@ -247,7 +250,7 @@ def getBet(user,matchID):
     return jsonify(bet=response.fetchall())
 
 
-@app.route('/result/<string:matchID>', methods=['GET'])
+@app.route('/api/result/<string:matchID>', methods=['GET'])
 def getResult(matchID):
     conn = sqlite3.connect(databasesetting.db_path)
     sql_command = '''SELECT result from matches WHERE matchID=?'''
@@ -259,7 +262,7 @@ def getResult(matchID):
     conn.close
     return resp
 
-@app.route('/result/<string:matchID>/<string:result>',methods=['PUT'])
+@app.route('/api/result/<string:matchID>/<string:result>',methods=['PUT'])
 def putResult(matchID,result):
     conn = sqlite3.connect(databasesetting.db_path)
     sql_command = '''UPDATE matches SET result =? WHERE matchID=?'''
@@ -270,8 +273,8 @@ def putResult(matchID,result):
     conn.close()
     return Response(status=200)
 
-@app.route('/getBets/<string:user>', methods=['GET'])
-@crossdomain(origin='*',headers='authorization')
+@app.route('/api/getBets/<string:user>', methods=['GET'])
+@crossdomain(origin='http://localhost',headers='authorization')
 @auth.login_required
 def getBets(user):
     #if (not verifyPassword(user,password)):
@@ -298,6 +301,7 @@ def getBets(user):
         jsonitem['result'] = match[4]
         jsonitem['omgång'] = match[5]
         jsonitem['bet'] = result[1]
+        jsonitem['played'] = isMatchPlayed(match[0])
 
         bets.append(jsonitem)
 
@@ -318,7 +322,7 @@ def getUsers():
 
     return jsonify(users=response.fetchall())
 
-@app.route('/createUser/<string:user>/<string:password>',methods=['POST'])
+@app.route('/api/createUser/<string:user>/<string:password>',methods=['POST'])
 def createUser(user,password):
     conn = sqlite3.connect(databasesetting.db_path)
     sql_command = '''SELECT * FROM users WHERE user=?'''
@@ -334,7 +338,7 @@ def createUser(user,password):
     saveUser(user,password)
     resp = Response("user created", status=200)
     return resp
-@app.route('/user/<string:user>', methods =['DELETE'])
+@app.route('/api/user/<string:user>', methods =['DELETE'])
 def deleteUser(user):
     conn = sqlite3.connect(databasesetting.db_path)
     sql_command = '''DELETE FROM users WHERE user = ?'''
@@ -378,7 +382,7 @@ def verifyPassword(user,password):
     conn.close()
     return True
 
-@app.route('/placeBet/<string:user>/<string:password>/<string:matchID>/<string:result>',methods=['PUT'])
+@app.route('/api/placeBet/<string:user>/<string:password>/<string:matchID>/<string:result>',methods=['PUT'])
 @crossdomain(origin='*',headers='authorization')
 def placeBet(user,password,matchID,result):
     if (not verifyPassword(user,password)):
