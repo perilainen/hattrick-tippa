@@ -9,10 +9,20 @@ td.point0{
 	background:white;
 }
 
-
+td.playedtrue{
+	background:grey;
+}
 .matches{
 	
 }
 .table{
 	
+}
+
+
+.table tbody tr.playedtrue {
+  background-color: grey !important;
+}
+input.playedtrue {
+background-color: grey !important;	
 }

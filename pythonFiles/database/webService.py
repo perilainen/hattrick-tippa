@@ -153,14 +153,13 @@ def getTable():
 
                 betData =  json.loads(bet.data)['bet']
                 if not (betData[0][0]==None):
-                    print betData[0][0]
+
                     userdict[users[i][0]] +=getPoints(betData[0][0],result)
-                    print result
+
     table = []
     for i in userdict:
         j={}
-        print i
-        print userdict[i]
+
         table.append({'user':i,'points':userdict[i]})
     resp = jsonify(table=table)
     return resp
@@ -200,9 +199,7 @@ def getOfficialBets():
             bet =  json.loads(getBet(user,match[0]).data)['bet'][0][0]
             listbet = {"user":user}
             listbet["bet"] = bet
-            print(match[0])
-            print bet
-            print match
+
             listbet["point"] = getPoints(bet,(match[4]))
             list.append(listbet)
         jsonitem['users'] = list
@@ -211,8 +208,7 @@ def getOfficialBets():
     return resp
 
 def validateresult(stringResult):
-    pattern = re.compile('^[0-9]+\-[0-9]+$')
-    print "test"
+
     return re.match('^[0-9]+\-[0-9]+$',stringResult)
 
 
@@ -285,15 +281,14 @@ def getBets(user):
     response = conn.execute(sql_command,params)
 
     results  = response.fetchall()
-    print getMatch(results[0][0])
+
 
     bets = []
 
     for result in results:
-        print result
+
         match = getMatch(result[0])[0]
-        print match[0]
-        print match
+
         jsonitem = {"MatchId": match[0]}
         jsonitem['HomeTeam'] = match[1]
         jsonitem['AwayTeam'] = match[2]

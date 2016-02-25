@@ -1,71 +1,76 @@
-﻿
-		<h1>Home</h1>
-<p>You're logged in!!</p>
-<p>{{$scope.test.currentUser}}</p>
-<p><a href="#/login">Logout</a></a></p>
+﻿<h1>Home</h1>
+<p>
+	You're logged in!!
+</p>
+
+<p>
+	<a href="#/login">Logout</a></a>
+</p>
 
 
-<script src="modules/home/matches.js"></script>
+
 <h2>Tabell</h2>
-			<div class ="table">
-				<table border="1">
-					<tr>
-						<th> Spelare</th>
-						<th>Poäng</th>
-					</tr>
-					<tr ng-repeat="data in table.table | orderBy:'-points'">
-						<td>{{data.user}}</td>
-						<td>{{data.points}}</td>
-				</table>
-			</div>
-			
-			<h2>Resultat</h2>
-			<div class = "bets">
-				<table border = "1">
-					<tr>
-						<th>Match</th>
-						<th>Resultat</th>
-						<th ng-repeat="user in bets[0].users"> {{user.user}}</th>
-					</tr>
-					<tr ng-repeat="a in bets">
-						<td>{{a.HomeTeam}}-{{a.AwayTeam}}</td>
-						<td>{{a.result}}</td>
-						<td ng-repeat="user in a.users" class="point{{user.point}}"> {{user.bet}}</td>
-						<!--div>{{user.bet}} </div> <div>{{user.point}} </div></td-->
+<div class ="tabbel">
+	<table class= "table-condensed table">
+		<tr>
+			<th> Spelare</th>
+			<th>Poäng</th>
+		</tr>
+		<tr ng-repeat="data in table.table | orderBy:'-points'">
+			<td>{{data.user}}</td>
+			<td>{{data.points}}</td>
+	</table>
+</div>
 
-				</table>
+<h2>Resultat</h2>
+<div class = "bets">
+	<table class = "table-striped table">
+		<tr>
+			<th>Match</th>
+			<th>Resultat</th>
+			<th ng-repeat="user in bets[0].users"> {{user.user}}</th>
+		</tr>
+		<tr ng-repeat="a in bets">
+			<td>{{a.HomeTeam}}-{{a.AwayTeam}}</td>
+			<td>{{a.result}}</td>
+			<td ng-repeat="user in a.users" class="point{{user.point}}"> {{user.bet}}</td>
+			<!--div>{{user.bet}} </div> <div>{{user.point}} </div></td-->
 
-			</div>
+	</table>
 
-			<h2>Mina Bets</h2>
-			<div class = "Bets">
-				<table border ="1">
-					<tr ng-repeat="a in mybets" class = "played{{a.played}}">
-												<td> {{a.date}}</td>
-						<td> {{a.HomeTeam}}-{{a.AwayTeam}}</td>
-						<!-- <td> - </td> -->
-						<!-- <td> {{a.AwayTeam}}</td> -->
-						<td><input type="text" ng-model=a.bet id = "resultat"> </td>
-						<td><button ng-click="placeBet($index)">Spara</button> </td>
-						
-					</table>
-					
-			</div>
-			
+</div>
+
+<h2>Mina Bets</h2>
+<div class = "table">
+	<table class="table">
+		<tr ng-repeat="a in mybets" class = "played{{a.played}}">
+			<td> {{a.date}}</td>
+			<td> {{a.HomeTeam}}-{{a.AwayTeam}}</td>
+			<!-- <td> - </td> -->
+			<!-- <td> {{a.AwayTeam}}</td> -->
+			<td>
+			<input type="text" placeholder= "x-x" class = form-control "played{{a.played}}" ng-model=a.bet id = "resultat">
+			</td>
+			<td>
+			<button ng-hide="{{a.played}}" ng-click="placeBet($index)">
+				Spara
+			</button></td>
+
+	</table>
+
+</div>
+
 <h2>Spelschema</h2>
-			<div class = "matches">
-				<table border ="1">
+<div class = "matches">
+	<table border ="1">
 
-					<tr ng-repeat="a in matches.matches">
-						<td>{{a[3]}}</td>
-						<td>{{a[1]}}-{{a[2]}}</td>
-						<!-- <td>-</td> -->
-						<!-- <td>{{a[2]}}</td> -->
-						<td>{{a[4]}}</td>
+		<tr ng-repeat="a in matches.matches">
+			<td>{{a[3]}}</td>
+			<td>{{a[1]}}-{{a[2]}}</td>
+			<!-- <td>-</td> -->
+			<!-- <td>{{a[2]}}</td> -->
+			<td>{{a[4]}}</td>
 
-				</table>
-			</div>
-			
-	
-		
+	</table>
+</div>
 
