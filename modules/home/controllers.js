@@ -26,7 +26,7 @@ home.controller('HomeController',function ($scope, $cookieStore, dataService,mat
     
     $scope.placeBet = function(index){
     	console.log(this.mybets[index][1])
-    	$http.defaults.headers.common.Authorization = 'Basic ';
+    	$http.defaults.headers.common.Authorization = 'Basic';
     	resp = $http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet)
     	console.log(resp)
     	
@@ -124,7 +124,7 @@ home.factory('dataService', function($http,Base64){
 	return{
 		gettable:function(){
 		//return {"table":{"pe":0}};
-		$http.defaults.headers.common['Authorization'] = 'Basic ';
+		$http.defaults.headers.common['Authorization'] = 'Basic';
     	
 		return $http.get("/api/table");
 		}
@@ -134,7 +134,7 @@ home.factory('dataService', function($http,Base64){
 home.factory('matchService', function($http){
 	return{
 		getmatches:function(){
-			$http.defaults.headers.common.Authorization = 'Basic ';
+			$http.defaults.headers.common.Authorization = 'Basic';
 			return $http.get("/api/matches");
 		}
 	};
@@ -143,7 +143,7 @@ home.factory('matchService', function($http){
 home.factory('betService',function($http){
 	return{
 		getbets:function(){
-			$http.defaults.headers.common.Authorization = 'Basic ';
+			$http.defaults.headers.common.Authorization = 'Basic';
 			return $http.get("/api/officialBets");
 		}
 		
