@@ -109,9 +109,9 @@ def getResultsFromHattrick():
         elif isMatchPlayed(i['MatchID']):
             resp = session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'live', 'matchID': i['MatchID'], 'version':'1.8'})
             xmldictmatch = xmltodict.parse(resp.text)
-            jsonfilematch =  json.loads(json.dumps(xmldictmatch))
+            jsonfilematch = json.loads(json.dumps(xmldictmatch))
 
-            homegoals =  jsonfilematch['HattrickData']['MatchList']['Match'][0]['HomeGoals']
+            homegoals = jsonfilematch['HattrickData']['MatchList']['Match'][0]['HomeGoals']
             awaygoals = jsonfilematch['HattrickData']['MatchList']['Match'][0]['AwayGoals']
             result = homegoals+"-"+awaygoals
             putResult(i['MatchID'],result)
@@ -251,8 +251,11 @@ def getOfficialBets():
         for i in range(len(users)):
             user =  users[i][0]
             bet =  json.loads(getBet(user,match[0]).data)['bet'][0][0]
+
+            comment = json.loads(getComment(user,match[0]).data)['comment'][0][0]
             listbet = {"user":user}
             listbet["bet"] = bet
+            listbet['comment'] = comment
 
             listbet["point"] = getPoints(bet,(match[4]))
             list.append(listbet)
@@ -289,6 +292,16 @@ def getPoints(bet,result):
             return 1
 
     return 0
+
+def getComment(user,matchID):
+    conn = sqlite3.connect(databasesetting.db_path)
+    sql_command = '''SELECT Comment from results WHERE user=? AND matchID=?'''
+    params = ([user,matchID])
+    print params
+    response = conn.execute(sql_command,params)
+
+    return jsonify(comment=response.fetchall())
+
 
 def getBet(user,matchID):
     conn = sqlite3.connect(databasesetting.db_path)
@@ -330,7 +343,7 @@ def getBets(user):
     #if (not verifyPassword(user,password)):
     #    return Response("not allowed",status=401)
     conn = sqlite3.connect(databasesetting.db_path)
-    sql_command = '''SELECT matchID, result from results WHERE user=?'''
+    sql_command = '''SELECT matchID, result, Comment from results WHERE user=?'''
     params = ([user])
     response = conn.execute(sql_command,params)
 
@@ -350,6 +363,7 @@ def getBets(user):
         jsonitem['result'] = match[4]
         jsonitem['omgång'] = match[5]
         jsonitem['bet'] = result[1]
+        jsonitem['comment'] = result[2]
         jsonitem['played'] = isMatchPlayed(match[0])
 
         bets.append(jsonitem)
@@ -434,15 +448,17 @@ def verifyPassword(user,password):
 @app.route('/api/placeBet/<string:user>/<string:password>/<string:matchID>/<string:result>',methods=['PUT'])
 @crossdomain(origin='*',headers='authorization')
 def placeBet(user,password,matchID,result):
+    comment = request.args.get('comment')
+
     if (not verifyPassword(user,password)):
         return Response("not allowed",status=401)
     if (isMatchPlayed(matchID)):
         return Response("not allowed",status=401)
 
-    sql_command = '''UPDATE results SET result =? WHERE matchID=? AND user=?'''
+    sql_command = '''UPDATE results SET result =?, Comment=? WHERE matchID=? AND user=?'''
 
     conn = sqlite3.connect(databasesetting.db_path)
-    params = ([result,matchID,user])
+    params = ([result,comment, matchID,user])
     resp = conn.execute(sql_command,params)
     print resp.fetchall()
     conn.commit()

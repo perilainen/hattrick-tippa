@@ -1,2 +1,4 @@
 modules = ["flask-HTTPAuth ",
-           "xmltodict" ]
+           "xmltodict",
+           "rauth"
+           ]

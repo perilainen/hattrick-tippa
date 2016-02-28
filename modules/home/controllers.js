@@ -29,8 +29,8 @@ home.controller('HomeController',function ($scope, $cookieStore, dataService,mat
     $scope.placeBet = function(index){
     	console.log(this.mybets[index][1])
     	$http.defaults.headers.common.Authorization = 'Basic';
-    	$http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet)
-    	$scope.this.mybets[index].MatchId.$dirty=false;
+    	$http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet+"?comment="+this.mybets[index].comment)
+    	/*$scope.this.mybets[index].MatchId.$dirty=false;*/
 
     	
     };

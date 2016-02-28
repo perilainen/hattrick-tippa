@@ -29,12 +29,14 @@
 		<tr>
 			<th>Match</th>
 			<th>Resultat</th>
-			<th ng-repeat="user in bets[0].users"> {{user.user}}</th>
+			<th colspan="2" ng-repeat="user in bets[0].users"> {{user.user}}</th>
 		</tr>
 		<tr ng-repeat="a in bets">
 			<td>{{a.HomeTeam}}-{{a.AwayTeam}}</td>
 			<td>{{a.result}}</td>
-			<td ng-repeat="user in a.users" class="point{{user.point}}"> {{user.bet}}</td>
+			
+			<td ng-repeat-start="user in a.users" class="point{{user.point}}"> {{user.bet}}</td>
+			<td ng-repeat-end="user in a.users"> {{user.comment}}</td>
 			<!--div>{{user.bet}} </div> <div>{{user.point}} </div></td-->
 
 	</table>
@@ -53,6 +55,11 @@
 				
 			<input type="text" name = "{{a.MatchId}}" ng-pattern = "re" placeholder= "x-x" class = form-control "played{{a.played}}" ng-model=a.bet id = "resultat">
 			
+			</td>
+			
+			<td>
+				<textarea type="text" ng-model=a.comment></textarea>
+				
 			</td>
 			<td>
 			<button ng-hide="{{a.played}}" ng-click="placeBet($index)">
