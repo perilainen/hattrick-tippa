@@ -20,7 +20,7 @@ angular.module('Authentication')
                     $location.path('/');
                 } else {
                 	console.log("other")
-                    $scope.error = response.message;
+                    $scope.error = "wrong username and/or password";
                     $scope.dataLoading = false;
                 }
             });

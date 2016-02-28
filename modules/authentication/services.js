@@ -9,31 +9,32 @@ angular.module('Authentication')
 
         service.Login = function (username, password, callback) {
 
-            /* Dummy authentication for testing, uses $timeout to simulate api call
-             ----------------------------------------------*/
-            /*$timeout(function () {
-                var response = { success: username === 'test' && password === 'test' };
-                if (!response.success) {
-                    response.message = 'Username or password is incorrect';
-                }
-                callback(response);
-            }, 1000);*/
-
-
-            /* Use this for real authentication
-             ----------------------------------------------*/
-            //console.log(username)
-            //console.log(password)
-             
-            //$http.defaults.headers.common = {"Access-Control-Request-Headers": "accept, origin, authorization"};
+            
             $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + password); // jshint ignore:line
-            $http.get("/api/login", { username: username, password: password })
+            $http({
+  method: 'GET',
+  url: "/api/login"
+}).then(function successCallback(response) {
+    // this callback will be called asynchronously
+    // when the response is available
+    callback(response.data,response.status)
+  }, function errorCallback(response) {
+  	callback(response.data,response.status)
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+  });
+            
+            
+            /*$http.get("/api/login", { username: username, password: password })
                 .success(function (data,status,headers,config) {
+                	console.log("test")
                     callback(data,status);
+                 
                 });
-
+                .error(function (data,status,headers,config){
+                	callback(data,status);
+                });*/
         };
-
         service.SetCredentials = function (username, password) {
             var authdata = Base64.encode(username + ':' + password);
 

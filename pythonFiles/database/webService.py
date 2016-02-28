@@ -6,12 +6,19 @@ import json
 import sqlite3
 from flask import Response, jsonify
 import databasesetting
+import settings
 app = Flask(__name__)
 from datetime import date
 import datetime
 import time
 import re
+import xmltodict
+from rauth import OAuth1Service
+from rauth import OAuth1Session
+from rauth.oauth import HmacSha1Signature
+import json
 
+import xmltodict
 
 
 from flask import make_response, request, current_app, jsonify
@@ -65,7 +72,57 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
-    
+
+
+@app.route('/api/getResultsFromHattrick', methods=['GET','OPTIONS'])
+@crossdomain(origin='*',headers='autorizations')
+def getResultsFromHattrick():
+    access_token_key= request.args.get('access_token_key')
+    access_token_secret = request.args.get('access_token_secret')
+    consumer_key = settings.consumer_key
+    consumer_secret = settings.consumer_secret
+    chpp = OAuth1Service(
+    consumer_key=consumer_key,
+    consumer_secret=consumer_secret,
+    request_token_url='https://chpp.hattrick.org/oauth/request_token.ashx',
+    access_token_url='https://chpp.hattrick.org/oauth/access_token.ashx',
+    authorize_url='https://chpp.hattrick.org/oauth/authorize.aspx',
+    base_url='http://chpp.hattrick.org/chppxml.ashx',
+    signature_obj=HmacSha1Signature)
+
+    session = OAuth1Session(consumer_key, consumer_secret, access_token=access_token_key, access_token_secret=access_token_secret)
+    print access_token_key
+    print access_token_secret
+    #The way we choose doesn't know about base_url, add the url
+    r = session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'leaguefixtures', 'version':'1.2'})
+
+    xmldict = xmltodict.parse(r.text)
+    jsonfile =  json.loads(json.dumps(xmldict))
+    print jsonfile
+    for i in jsonfile['HattrickData']['Match']:
+
+
+
+        if  'HomeGoals' in i:
+            result = i['HomeGoals']+"-"+i['AwayGoals']
+            putResult(i['MatchID'],result)
+        elif isMatchPlayed(i['MatchID']):
+            resp = session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'live', 'matchID': i['MatchID'], 'version':'1.8'})
+            xmldictmatch = xmltodict.parse(resp.text)
+            jsonfilematch =  json.loads(json.dumps(xmldictmatch))
+
+            homegoals =  jsonfilematch['HattrickData']['MatchList']['Match'][0]['HomeGoals']
+            awaygoals = jsonfilematch['HattrickData']['MatchList']['Match'][0]['AwayGoals']
+            result = homegoals+"-"+awaygoals
+            putResult(i['MatchID'],result)
+
+
+
+
+
+    return Response("Matches collected from Hattrick",status=200)
+
+
 
 @app.route('/api/matches', methods=['GET','OPTIONS'])
 @crossdomain(origin='*',headers='authorization')
@@ -78,11 +135,6 @@ def getMatches():
     resp = Response(json.dumps(test), status=200,mimetype='application/json')
     return resp
 
-
-users = {
-    "john": "hello",
-    "susan": "bye"
-}
 
 def getMatch(id):
     conn = sqlite3.connect(databasesetting.db_path)
@@ -108,7 +160,7 @@ def get_pw(username):
         data  = resp.fetchall()
         print data
         return data[0][0]
-
+    print "nu är jag här"
     return None
 
 @app.route('/api/login',methods = ['GET'])
@@ -118,6 +170,8 @@ def index():
 
     resp = Response("Hello, %s!" % auth.username(), status=200,)
     return resp
+
+
 
 
 @app.route('/api/SetPassword/<string:user>/<string:newpass>', methods = ['PUT'])

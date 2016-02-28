@@ -9,8 +9,8 @@
 
 
 
-<h2>Tabell</h2>
 <div class ="tabbel">
+	<h2>Tabell</h2>
 	<table class= "table-condensed table">
 		<tr>
 			<th> Spelare</th>
@@ -22,8 +22,9 @@
 	</table>
 </div>
 
-<h2>Resultat</h2>
+
 <div class = "bets">
+	<h2>Resultat</h2>
 	<table class = "table-striped table">
 		<tr>
 			<th>Match</th>
@@ -40,25 +41,30 @@
 
 </div>
 
-<h2>Mina Bets</h2>
+
 <div class = "table">
-	<table class="table">
+	<h2>Mina Bets</h2>
+	<table class="table-striped table">
 		<tr ng-repeat="a in mybets" class = "played{{a.played}}">
 			<td> {{a.date}}</td>
 			<td> {{a.HomeTeam}}-{{a.AwayTeam}}</td>
-			<!-- <td> - </td> -->
-			<!-- <td> {{a.AwayTeam}}</td> -->
+			
 			<td>
-			<input type="text" placeholder= "x-x" class = form-control "played{{a.played}}" ng-model=a.bet id = "resultat">
+				
+			<input type="text" name = "{{a.MatchId}}" ng-pattern = "re" placeholder= "x-x" class = form-control "played{{a.played}}" ng-model=a.bet id = "resultat">
+			
 			</td>
 			<td>
 			<button ng-hide="{{a.played}}" ng-click="placeBet($index)">
 				Spara
 			</button></td>
+			
+			
 
 	</table>
 
 </div>
+
 
 <h2>Spelschema</h2>
 <div class = "matches">

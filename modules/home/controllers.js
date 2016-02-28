@@ -7,7 +7,7 @@ home.controller('HomeController',function ($scope, $cookieStore, dataService,mat
     	$scope.test = $cookieStore.get('globals')
     	console.log($scope.test.currentUser)
 
-    
+    $scope.re = '^[0-9]+\-[0-9]+$'
     dataService.gettable().then(function(d){
     	console.log("ttt")
     	$scope.table = d.data;
@@ -23,12 +23,15 @@ home.controller('HomeController',function ($scope, $cookieStore, dataService,mat
     myBetService.getMyBets($scope.test).then(function(d){
     	$scope.mybets = d.data;
     });
+    $http.defaults.headers.common.Authorization = 'Basic';
+    $http.get("/api/getResultsFromHattrick?access_token_secret=KPSKKNqpy58pk5L3&access_token_key=jApo2OYPH5rw4WSJ")
     
     $scope.placeBet = function(index){
     	console.log(this.mybets[index][1])
     	$http.defaults.headers.common.Authorization = 'Basic';
-    	resp = $http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet)
-    	console.log(resp)
+    	$http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet)
+    	$scope.this.mybets[index].MatchId.$dirty=false;
+
     	
     };
     

@@ -26,3 +26,10 @@ td.playedtrue{
 input.playedtrue {
 background-color: grey !important;	
 }
+
+input.ng-invalid.ng-touched {
+    background-color: #FA787E;
+  }
+input.ng-valid.ng-dirty {
+    background-color: #78FA89;
+  }
