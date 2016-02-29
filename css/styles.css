@@ -19,6 +19,11 @@ td.playedtrue{
 	
 }
 
+.comment{
+	font-size: 10px;
+	width: 150px;
+}
+
 
 .table tbody tr.playedtrue {
   background-color: grey !important;
