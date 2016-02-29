@@ -98,7 +98,7 @@ def getResultsFromHattrick():
 
     xmldict = xmltodict.parse(r.text)
     jsonfile =  json.loads(json.dumps(xmldict))
-    print jsonfile
+    logging.debug(jsonfile)
     for i in jsonfile['HattrickData']['Match']:
 
 
