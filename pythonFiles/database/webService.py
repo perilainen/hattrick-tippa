@@ -17,7 +17,7 @@ from rauth import OAuth1Service
 from rauth import OAuth1Session
 from rauth.oauth import HmacSha1Signature
 import json
-
+import logging
 import xmltodict
 
 
@@ -477,4 +477,8 @@ def isMatchPlayed(matchID):
 
 
 if __name__=='__main__':
+    logging.basicConfig(filename='webService.log', level=logging.DEBUG)
+
+    logging.info('Started')
+
     app.run(debug=True)
