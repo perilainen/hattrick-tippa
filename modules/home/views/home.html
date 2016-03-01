@@ -11,13 +11,17 @@
 
 <div class ="col-xs-offset-2 col-xs-4 tabbel">
 	<h2>Tabell</h2>
-	<table class= "table-condensed table">
+	<table class= "table table-condensed">
 		<tr>
-			<th> Spelare</th>
+			<th>Spelare</th>
+			<th>Rätt resultat</th>
+			<th>Rätt tecken</th>
 			<th>Poäng</th>
 		</tr>
 		<tr ng-repeat="data in table.table | orderBy:'-points'">
 			<td>{{data.user}}</td>
+			<td>{{data.correct}}</td>
+			<td>{{data.sign}}</td>
 			<td>{{data.points}}</td>
 	</table>
 </div>
@@ -48,7 +52,7 @@
 <div class = "col-xs-12 table">
 	<h2>Mina Bets</h2>
 	<table class="table-striped table">
-		<tr ng-repeat="a in mybets" class = "played{{a.played}}">
+		<tr ng-repeat="a in mybets" class = "played{{a.played}}" ng-hide={{a.played}}>
 			<td> {{a.date}}</td>
 			<td> {{a.HomeTeam}}-{{a.AwayTeam}}</td>
 			

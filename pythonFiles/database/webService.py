@@ -197,8 +197,12 @@ def getTable():
     matchesjson =  json.loads(matches.data)['matches']
     users  = json.loads(getUsers().data)['users']
     userdict = {}
+    trepoang = {}
+    enpoang={}
     for i in range(len(users)):
         userdict[users[i][0]] =0
+        trepoang[users[i][0]] =0
+        enpoang[users[i][0]] =0
     for match in matchesjson:
         result =(json.loads((getResult(match[0]).data))['result'])[0][0]
         if (result !=None):
@@ -207,14 +211,18 @@ def getTable():
 
                 betData =  json.loads(bet.data)['bet']
                 if not (betData[0][0]==None):
-
-                    userdict[users[i][0]] +=getPoints(betData[0][0],result)
+                    points = getPoints(betData[0][0],result)
+                    userdict[users[i][0]] +=points
+                    if points ==3:
+                        trepoang[users[i][0]] +=1
+                    if points ==1:
+                        enpoang[users[i][0]] +=1
 
     table = []
     for i in userdict:
         j={}
 
-        table.append({'user':i,'points':userdict[i]})
+        table.append({'user':i,'points':userdict[i],'correct':trepoang[i],'sign':enpoang[i]})
     resp = jsonify(table=table)
     return resp
 
