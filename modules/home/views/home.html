@@ -52,8 +52,15 @@
 <div class = "col-xs-12 table">
 	<h2>Mina Bets</h2>
 	<table class="table-striped table">
+		<th>Speltid</th>
+			<th>Låstid</th>
+			<th>Lag</th>
+			<th>Bet</th>
+			<th>Kommentar</th>
+			<th></th>
 		<tr ng-repeat="a in mybets" class = "played{{a.played}}" ng-hide={{a.played}}>
 			<td> {{a.date}}</td>
+			<td> {{a.locktime}}</td>
 			<td> {{a.HomeTeam}}-{{a.AwayTeam}}</td>
 			
 			<td>

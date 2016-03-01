@@ -30,6 +30,8 @@ auth = HTTPBasicAuth()
 
 
 
+LOCK_OFFSET = datetime.timedelta(days=1)
+
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
                 automatic_options=True):
@@ -229,18 +231,26 @@ def getTable():
 def getPlayedMatches():
     date =  datetime.datetime.now()
     #date =  datetime.datetime.now()+datetime.timedelta(days=7)
+    return getMatchesBeforeDate(date)
+
+
+def getLockedMatches():
+    date = datetime.datetime.now()-LOCK_OFFSET
+    return getMatchesBeforeDate(date)
+
+
+def getMatchesBeforeDate(date):
     sql_command = '''SELECT * FROM matches WHERE matchDate < ?'''
     params = ([date])
     conn = sqlite3.connect(databasesetting.db_path)
     resp = conn.execute(sql_command,params)
     return resp.fetchall()
 
-
 @app.route('/api/officialBets',methods = ['GET'])
 @crossdomain(origin='*',headers='authorization')
 def getOfficialBets():
     #test#"2017-01-01 01:00:00"
-    matches =  getPlayedMatches()
+    matches =  getLockedMatches()
     users  = json.loads(getUsers().data)['users']
     bets = []
 
@@ -373,6 +383,8 @@ def getBets(user):
         jsonitem['bet'] = result[1]
         jsonitem['comment'] = result[2]
         jsonitem['played'] = isMatchPlayed(match[0])
+        jsonitem['locked'] = isMatchLocked(match[0])
+        jsonitem['locktime'] = getLockTime(match[0])
 
         bets.append(jsonitem)
 
@@ -479,9 +491,39 @@ def isMatchPlayed(matchID):
     matchids= []
     for match in matches:
         matchids.append(int(match[0]))
-    print matchID
-    print matchids
     return int(matchID) in matchids
+
+
+
+def isMatchLocked(matchID):
+    matches = getLockedMatches()
+    matchids= []
+    for match in matches:
+        matchids.append(int(match[0]))
+    return int(matchID) in matchids
+
+def getLockTime(matchID):
+    sql_command='''SELECT matchDate FROM matches WHERE matchID = ?'''
+    params = [matchID]
+    conn = sqlite3.connect(databasesetting.db_path)
+
+    resp = conn.execute(sql_command,params)
+    datein = resp.fetchall()[0][0]
+    print datein
+    date= datetime.datetime.strptime(datein, '%Y-%m-%d %H:%M:%S')
+
+    conn.close
+    print
+    return str(date-LOCK_OFFSET)
+
+
+
+
+
+
+
+
+
 
 
 if __name__=='__main__':
