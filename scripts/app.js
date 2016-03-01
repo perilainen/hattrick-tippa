@@ -4,14 +4,14 @@
 angular.module('Authentication', []);
 angular.module('Home', []);
 
-angular.module('app', ['irontec.simpleChat']);
+
 
 angular.module('BasicHttpAuthExample', [
     'Authentication',
     'Home',
     'ngRoute',
     'ngCookies',
-    'app'
+    
 ])
 
 .config(['$routeProvider','$httpProvider', function ($routeProvider,$httpProvider) {
