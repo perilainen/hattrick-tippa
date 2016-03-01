@@ -1,6 +1,6 @@
 ﻿<h1>Home</h1>
 <p>
-	You're logged in!!
+	Välkommen  {{test.currentUser.username}}
 </p>
 
 <p>
@@ -9,7 +9,9 @@
 
 
 
-<div class ="tabbel">
+
+
+<div class ="col-xs-offset-2 col-xs-4 tabbel">
 	<h2>Tabell</h2>
 	<table class= "table-condensed table">
 		<tr>
@@ -21,11 +23,12 @@
 			<td>{{data.points}}</td>
 	</table>
 </div>
+<br>
 
-
-<div class = "bets">
+<div class = "col-xs-12 bets">
 	<h2>Resultat</h2>
 	<table class = "table-striped table">
+		
 		<tr>
 			<th>Match</th>
 			<th>Resultat</th>
@@ -35,7 +38,7 @@
 			<td>{{a.HomeTeam}}-{{a.AwayTeam}}</td>
 			<td>{{a.result}}</td>
 			
-			<td ng-repeat-start="user in a.users" class="point{{user.point}}"> {{user.bet}}</td>
+			<td ng-repeat-start="user in a.users" class="input-normal point{{user.point}}"> {{user.bet}}</td>
 			<td ng-repeat-end="user in a.users" class = "comment"> {{user.comment}}</td>
 			<!--div>{{user.bet}} </div> <div>{{user.point}} </div></td-->
 
@@ -44,7 +47,7 @@
 </div>
 
 
-<div class = "table">
+<div class = "col-xs-12 table">
 	<h2>Mina Bets</h2>
 	<table class="table-striped table">
 		<tr ng-repeat="a in mybets" class = "played{{a.played}}">
@@ -53,12 +56,12 @@
 			
 			<td>
 				
-			<input type="text" name = "{{a.MatchId}}" ng-disabled="{{a.played}}"  ng-pattern = "re" placeholder= "x-x" class = form-control "played{{a.played}}" ng-model=a.bet id = "resultat">
+			<input type="text" name = "{{a.MatchId}}" ng-disabled="{{a.played}}"  ng-pattern = "re" placeholder= "x-x" class =  "form-control input-normal played{{a.played}}" ng-model=a.bet id = "resultat">
 			
 			</td>
 			
-			<td>
-				<textarea type="text" ng-disabled="{{a.played}}" ng-model=a.comment class = "comment" rows="6" ></textarea>
+			<td class="col-md-4">
+				<textarea type="text" ng-disabled="{{a.played}}" ng-model=a.comment class = "form-control comment" rows="3" ></textarea>
 				
 			</td>
 			<td>
@@ -73,17 +76,5 @@
 </div>
 
 
-<h2>Spelschema</h2>
-<div class = "matches">
-	<table border ="1">
 
-		<tr ng-repeat="a in matches.matches">
-			<td>{{a[3]}}</td>
-			<td>{{a[1]}}-{{a[2]}}</td>
-			<!-- <td>-</td> -->
-			<!-- <td>{{a[2]}}</td> -->
-			<td>{{a[4]}}</td>
-
-	</table>
-</div>
 
