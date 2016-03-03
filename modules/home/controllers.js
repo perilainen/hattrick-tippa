@@ -32,6 +32,7 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, dataSe
     });
     betService.getbets().then(function(d){
     	$scope.bets = d.data;
+    	
     });
     $scope.ChangeSettings = function(){
 		
@@ -44,14 +45,33 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, dataSe
 
     myBetService.getMyBets($scope.test).then(function(d){
     	$scope.mybets = d.data;
+    	$scope.saved = angular.copy($scope.mybets)
+    	
     });
     $http.defaults.headers.common.Authorization = 'Basic';
     $http.get("/api/getResultsFromHattrick?access_token_secret=KPSKKNqpy58pk5L3&access_token_key=jApo2OYPH5rw4WSJ")
     
+    
+    $scope.placeBets = function(){
+    	for (var i = 0; i < $scope.mybets.length ; i++) {
+    		$scope.placeBet(i)
+    		$scope.Test.$setPristine()
+    }}
+    
+   
+    $scope.rePlaceBets = function(){
+    	angular.copy($scope.saved,$scope.mybets)
+    	$scope.Test.$setPristine()
+    	
+    }
+    
     $scope.placeBet = function(index){
-    	console.log(this.mybets[index][1])
+    	console.log(index)
+    	//console.log(this.mybets[index][1])
+    	
     	$http.defaults.headers.common.Authorization = 'Basic';
-    	$http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet+"?comment="+this.mybets[index].comment)    	
+    	$http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet+"?comment="+this.mybets[index].comment )
+    	//$scope.mybets.saved[index]=$scope.mybets.bet[index]    	
     };
     
     });

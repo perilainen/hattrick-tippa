@@ -380,8 +380,14 @@ def getBets(user):
         jsonitem['date'] = match[3]
         jsonitem['result'] = match[4]
         jsonitem['omgång'] = match[5]
+
         jsonitem['bet'] = result[1]
+        if jsonitem['bet'] =='undefined':
+            jsonitem['bet']=""
         jsonitem['comment'] = result[2]
+        if jsonitem['comment']=='null':
+            jsonitem['comment']=""
+        
         jsonitem['played'] = isMatchPlayed(match[0])
         jsonitem['locked'] = isMatchLocked(match[0])
         jsonitem['locktime'] = getLockTime(match[0])

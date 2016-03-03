@@ -2,8 +2,7 @@ import sqlite3
 import databasesetting
 import os.path
 
-conn = sqlite3.connect(databasesetting.db_path)
-curr = conn.cursor()
+
 
 curr.execute("""DROP TABLE matches;""")
 

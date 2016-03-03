@@ -58,9 +58,19 @@
 
 </div>
 
-
-<div class = "col-xs-12 table" id="MinaBets">
+<form name='Test'>
+<div class = "col-xs-12 table" id="MinaBets"> 
 	<h2>Mina Bets</h2>
+	
+	<button class="btn btn-success" ng-disabled="!Test.$dirty" ng-click="placeBets()" >spara</button>
+			
+
+			<button class="btn btn-danger" ng-click="rePlaceBets()" ng-disabled="!Test.$dirty">
+Återställ
+			</button></td>
+
+
+
 	<table class="table-striped table">
 		<th>Speltid</th>
 			<th>Låstid</th>
@@ -75,7 +85,7 @@
 			
 			<td>
 				
-			<input type="text" name = "{{a.MatchId}}" ng-disabled="{{a.played}}"  ng-pattern = "re" placeholder= "x-x" class =  "form-control input-normal played{{a.played}}" ng-model=a.bet id = "resultat">
+			<input type="text" name = "{{a.MatchId}}" ng-disabled=""  ng-pattern = "re" placeholder= "x-x" class =  "form-control input-normal played{{a.played}}" ng-model=a.bet id = "resultat">
 			
 			</td>
 			
@@ -84,8 +94,8 @@
 				
 			</td>
 			<td>
-			<button ng-hide="{{a.played}}" ng-click="placeBet($index)">
-				Spara
+			<button ng-hide="{{a.played}}" ng-click="placeBet($index)" ng-disabled="">
+spara
 			</button></td>
 			
 			
@@ -94,6 +104,6 @@
 
 </div>
 
-
+</form>
 
 
