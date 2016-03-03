@@ -10,13 +10,17 @@
 </head>
 <body>
 
-    <div class="jumbotron">
+    <div class="jumbotron wrapper">
         <div class="container">
             <!-- <div class="col-xs-offset-2 col-xs-8"> -->
                 <div ng-view></div>
             <!-- </div> -->
+            
         </div>
     </div>
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <a href="mailto:perilainen@gmail.com?Subject=HT Betting" target="_top">Contact</a>
+</nav>
     
     <script src="bootstrap/jquery.js"></script>
     <script src="angular/angular.min.js"></script>
@@ -36,6 +40,6 @@
     <script src="modules/authentication/controllers.js"></script>
     <!-- <script src="modules/ChangePassword/controllers.js"></script> -->
     <script src="modules/home/controllers.js"></script>
-    
+   
 </body>
 </html>

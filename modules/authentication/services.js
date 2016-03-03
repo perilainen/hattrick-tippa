@@ -24,16 +24,7 @@ angular.module('Authentication')
     // or server returns response with an error status.
   });
             
-            
-            /*$http.get("/api/login", { username: username, password: password })
-                .success(function (data,status,headers,config) {
-                	console.log("test")
-                    callback(data,status);
-                 
-                });
-                .error(function (data,status,headers,config){
-                	callback(data,status);
-                });*/
+           
         };
         service.SetCredentials = function (username, password) {
             var authdata = Base64.encode(username + ':' + password);

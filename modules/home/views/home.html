@@ -1,15 +1,25 @@
-﻿<h1>Välkommen  {{test.currentUser.username}}</h1>
+﻿<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    
+    {{test.currentUser.username}}
+    <a ng-click="scrollTo('tabell')" class = "pointer">Tabell</a>
+    <a ng-click="scrollTo('Resultat')">Resultat</a>
+    <a ng-click="scrollTo('MinaBets')">Mina bets</a>
+	<a href="#/login">Logout</a>
+	<a href="#/settings">Inställningar</a>
+</nav>
 
+<br>
+<br>
 
 <p>
-	<a href="#/login">Logout</a></a>
+	
 </p>
 
 
 
 
 
-<div class ="col-xs-offset-2 col-xs-4 tabbel">
+<div class ="col-xs-offset-2 col-xs-4 tabbel" id="tabell">
 	<h2>Tabell</h2>
 	<table class= "table table-condensed">
 		<tr>
@@ -27,7 +37,7 @@
 </div>
 <br>
 
-<div class = "col-xs-12 bets">
+<div class = "col-xs-12 bets" id ="Resultat">
 	<h2>Resultat</h2>
 	<table class = "table-striped table">
 		
@@ -49,7 +59,7 @@
 </div>
 
 
-<div class = "col-xs-12 table">
+<div class = "col-xs-12 table" id="MinaBets">
 	<h2>Mina Bets</h2>
 	<table class="table-striped table">
 		<th>Speltid</th>

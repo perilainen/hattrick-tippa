@@ -11,6 +11,7 @@ angular.module('BasicHttpAuthExample', [
     'Home',
     'ngRoute',
     'ngCookies',
+  
     
 ])
 
@@ -26,6 +27,11 @@ angular.module('BasicHttpAuthExample', [
         .when('/', {
             controller: 'HomeController',
             templateUrl: 'modules/home/views/home.html'
+        })
+        
+        .when('/settings', {
+            controller: 'HomeController',
+            templateUrl: 'modules/Settings/views/settings.html'
         })
 
         .otherwise({ redirectTo: '/login' });

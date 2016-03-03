@@ -2,10 +2,24 @@
 
 var home = angular.module('Home',[])
 
-home.controller('HomeController',function ($scope, $cookieStore, dataService,matchService,betService,myBetService,$http) {
+home.controller('HomeController',function ($scope, $cookieStore, $window, dataService,matchService,betService,myBetService,changePassword, $http,$location,$anchorScroll) {
+	
+	
+	
     	
-    	$scope.test = $cookieStore.get('globals')
-    	console.log($scope.test.currentUser)
+    $scope.scrollTo = function(id) {
+    	
+    	var old = $location.hash();
+    	$location.hash(id);
+    	$anchorScroll();
+    	//reset to old to keep any additional routing logic from kicking in
+    	$location.hash(old);
+    	
+   	};
+   	
+    	
+	$scope.test = $cookieStore.get('globals')
+	console.log($scope.test.currentUser)
 
     $scope.re = '^[0-9]+\-[0-9]+$'
     dataService.gettable().then(function(d){
@@ -19,7 +33,15 @@ home.controller('HomeController',function ($scope, $cookieStore, dataService,mat
     betService.getbets().then(function(d){
     	$scope.bets = d.data;
     });
-    console.log($scope.test)
+    $scope.ChangeSettings = function(){
+		
+		changePassword.setPass($scope.password1,$scope.test)
+		$window.location.href = '#/login';
+			
+		
+	}
+    
+
     myBetService.getMyBets($scope.test).then(function(d){
     	$scope.mybets = d.data;
     });
@@ -29,10 +51,7 @@ home.controller('HomeController',function ($scope, $cookieStore, dataService,mat
     $scope.placeBet = function(index){
     	console.log(this.mybets[index][1])
     	$http.defaults.headers.common.Authorization = 'Basic';
-    	$http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet+"?comment="+this.mybets[index].comment)
-    	/*$scope.this.mybets[index].MatchId.$dirty=false;*/
-
-    	
+    	$http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet+"?comment="+this.mybets[index].comment)    	
     };
     
     });
@@ -122,11 +141,21 @@ home.factory('Base64', function() {
         }
     };
 });
+home.factory('changePassword', function($http,Base64){
+	return {
+		setPass:function(newPass,user){
+			$http.defaults.headers.common.Authorization = 'Basic ' + user.currentUser.authdata;
+			
+			return $http.put("/api/SetPassword/"+user.currentUser.username+"/"+newPass);
+		}
+	};
+});
+
 
 home.factory('dataService', function($http,Base64){
 	return{
 		gettable:function(){
-		//return {"table":{"pe":0}};
+		
 		$http.defaults.headers.common['Authorization'] = 'Basic';
     	
 		return $http.get("/api/table");
@@ -159,7 +188,6 @@ home.factory('myBetService',function($http,Base64){
 			console.log(user.currentUser.authdata);
 			$http.defaults.headers.common.Authorization = 'Basic ' + user.currentUser.authdata;//Base64.encode('per' + ':' + 'per');
 			
-			//return $http.get("http://127.0.0.1:5000/table");
 			return $http.get("/api/getBets/"+user.currentUser.username);
 			
 		}

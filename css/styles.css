@@ -23,11 +23,28 @@ td.playedtrue{
 	
 }
 
+.footer, .push {
+height: 4em;
+}
+.wrapper {
+min-height: 100%;
+height: auto !important;
+height: 100%;
+margin: 0 0 -4em;
+padding: 0 0 4em;
+}
+html, body {
+height: 100%;
+}
+
 .comment{
 	font-size: 12px;
 	
 }
 
+a {
+    cursor: pointer;
+}
 
 .table tbody tr.playedtrue {
   background-color: grey !important;
