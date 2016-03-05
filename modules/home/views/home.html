@@ -78,7 +78,7 @@
 			<th>Bet</th>
 			<th>Kommentar</th>
 			<th></th>
-		<tr ng-repeat="a in mybets" class = "played{{a.played}}" ng-hide={{a.played}}>
+		<tr ng-repeat="a in mybets" class = "played{{a.played}}" ng-hide={{a.locked}}>
 			<td> {{a.date}}</td>
 			<td> {{a.locktime}}</td>
 			<td> {{a.HomeTeam}}-{{a.AwayTeam}}</td>
