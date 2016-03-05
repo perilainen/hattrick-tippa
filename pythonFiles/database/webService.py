@@ -235,7 +235,8 @@ def getPlayedMatches():
 
 
 def getLockedMatches():
-    date = datetime.datetime.now()-LOCK_OFFSET
+    date = datetime.datetime.now()+LOCK_OFFSET
+    print str(date)
     return getMatchesBeforeDate(date)
 
 
@@ -244,13 +245,16 @@ def getMatchesBeforeDate(date):
     params = ([date])
     conn = sqlite3.connect(databasesetting.db_path)
     resp = conn.execute(sql_command,params)
-    return resp.fetchall()
+    matches = resp.fetchall()
+    print matches
+    return matches
 
 @app.route('/api/officialBets',methods = ['GET'])
 @crossdomain(origin='*',headers='authorization')
 def getOfficialBets():
     #test#"2017-01-01 01:00:00"
     matches =  getLockedMatches()
+    print "lockedmatches: "+ str(matches)
     users  = json.loads(getUsers().data)['users']
     bets = []
 
@@ -387,7 +391,7 @@ def getBets(user):
         jsonitem['comment'] = result[2]
         if jsonitem['comment']=='null':
             jsonitem['comment']=""
-        
+
         jsonitem['played'] = isMatchPlayed(match[0])
         jsonitem['locked'] = isMatchLocked(match[0])
         jsonitem['locktime'] = getLockTime(match[0])
