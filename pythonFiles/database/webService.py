@@ -93,8 +93,8 @@ def getResultsFromHattrick():
     signature_obj=HmacSha1Signature)
 
     session = OAuth1Session(consumer_key, consumer_secret, access_token=access_token_key, access_token_secret=access_token_secret)
-    print access_token_key
-    print access_token_secret
+    #print access_token_key
+    #print access_token_secret
     #The way we choose doesn't know about base_url, add the url
     r = session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'leaguefixtures', 'version':'1.2'})
 
@@ -109,14 +109,26 @@ def getResultsFromHattrick():
             result = i['HomeGoals']+"-"+i['AwayGoals']
             putResult(i['MatchID'],result)
         elif isMatchPlayed(i['MatchID']):
+
             resp = session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'live', 'matchID': i['MatchID'], 'version':'1.8'})
+            #print resp.text
             xmldictmatch = xmltodict.parse(resp.text)
             jsonfilematch = json.loads(json.dumps(xmldictmatch))
+            #print i['MatchID']
 
-            homegoals = jsonfilematch['HattrickData']['MatchList']['Match'][0]['HomeGoals']
-            awaygoals = jsonfilematch['HattrickData']['MatchList']['Match'][0]['AwayGoals']
-            result = homegoals+"-"+awaygoals
-            putResult(i['MatchID'],result)
+            #print jsonfilematch['HattrickData']['MatchList']['Match']
+
+            for match in jsonfilematch['HattrickData']['MatchList']['Match']:
+                if match['MatchID'] == i['MatchID']:
+
+
+                    homegoals = jsonfilematch['HattrickData']['MatchList']['Match'][0]['HomeGoals']
+                    awaygoals = jsonfilematch['HattrickData']['MatchList']['Match'][0]['AwayGoals']
+                    #print jsonfilematch
+                    #print homegoals
+                    #print awaygoals
+                    result = homegoals+"-"+awaygoals
+                    putResult(i['MatchID'],result)
 
 
 
@@ -149,18 +161,18 @@ def getMatch(id):
 def get_pw(username):
 
 
-    print username
+    #print username
     conn = sqlite3.connect(databasesetting.db_path)
     sql_command ="SELECT user from users WHERE user=?"
     params = ([username])
     resp = conn.execute(sql_command,params)
     if len(resp.fetchall())>0:
-        print "hej på dig"
+        #print "hej på dig"
         sql_command = "SELECT password from users WHERE user=?"
         params = ([username])
         resp = conn.execute(sql_command,params)
         data  = resp.fetchall()
-        print data
+        #print data
         return data[0][0]
     print "nu är jag här"
     return None
@@ -236,7 +248,7 @@ def getPlayedMatches():
 
 def getLockedMatches():
     date = datetime.datetime.now()+LOCK_OFFSET
-    print str(date)
+    #print str(date)
     return getMatchesBeforeDate(date)
 
 
@@ -246,7 +258,7 @@ def getMatchesBeforeDate(date):
     conn = sqlite3.connect(databasesetting.db_path)
     resp = conn.execute(sql_command,params)
     matches = resp.fetchall()
-    print matches
+    #print matches
     return matches
 
 @app.route('/api/officialBets',methods = ['GET'])
@@ -254,12 +266,12 @@ def getMatchesBeforeDate(date):
 def getOfficialBets():
     #test#"2017-01-01 01:00:00"
     matches =  getLockedMatches()
-    print "lockedmatches: "+ str(matches)
+    #print "lockedmatches: "+ str(matches)
     users  = json.loads(getUsers().data)['users']
     bets = []
 
     for match in matches:
-        print match
+        #print match
         jsonitem = {"MatchId": match[0]}
         jsonitem['HomeTeam'] = match[1]
         jsonitem['AwayTeam'] = match[2]
@@ -292,8 +304,8 @@ def validateresult(stringResult):
 
 
 def getPoints(bet,result):
-    print "Bet: "+str((bet))
-    print "Result: "+str(type(result))
+    #print "Bet: "+str((bet))
+    #print "Result: "+str(type(result))
     if validateresult(str(bet)) and validateresult(str(result)):
 
         if bet == result:
@@ -301,7 +313,7 @@ def getPoints(bet,result):
         signplace = str(bet).find("-")
         homegoalBet = str(bet)[0:signplace]
         awaygoalBet = str(bet)[signplace+1:]
-        print "homegoal: "+ homegoalBet
+        #print "homegoal: "+ homegoalBet
         betDiff =  int(homegoalBet)-int(awaygoalBet)
 
         signplaceresult = str(result).find("-")
@@ -319,7 +331,7 @@ def getComment(user,matchID):
     conn = sqlite3.connect(databasesetting.db_path)
     sql_command = '''SELECT Comment from results WHERE user=? AND matchID=?'''
     params = ([user,matchID])
-    print params
+    #print params
     response = conn.execute(sql_command,params)
 
     return jsonify(comment=response.fetchall())
@@ -329,7 +341,7 @@ def getBet(user,matchID):
     conn = sqlite3.connect(databasesetting.db_path)
     sql_command = '''SELECT result from results WHERE user=? AND matchID=?'''
     params = ([user,matchID])
-    print params
+    #print params
     response = conn.execute(sql_command,params)
 
     return jsonify(bet=response.fetchall())
@@ -352,7 +364,7 @@ def putResult(matchID,result):
     conn = sqlite3.connect(databasesetting.db_path)
     sql_command = '''UPDATE matches SET result =? WHERE matchID=?'''
     params = ([result, matchID])
-    print params
+    #print params
     response  = conn.execute(sql_command,params)
     conn.commit()
     conn.close()
@@ -490,7 +502,7 @@ def placeBet(user,password,matchID,result):
     conn = sqlite3.connect(databasesetting.db_path)
     params = ([result,comment, matchID,user])
     resp = conn.execute(sql_command,params)
-    print resp.fetchall()
+    #print resp.fetchall()
     conn.commit()
     conn.close()
     return Response("bet placed",status=200)
@@ -519,11 +531,11 @@ def getLockTime(matchID):
 
     resp = conn.execute(sql_command,params)
     datein = resp.fetchall()[0][0]
-    print datein
+    #print datein
     date= datetime.datetime.strptime(datein, '%Y-%m-%d %H:%M:%S')
 
     conn.close
-    print
+    #print
     return str(date-LOCK_OFFSET)
 
 
