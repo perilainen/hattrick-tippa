@@ -174,7 +174,7 @@ def get_pw(username):
         data  = resp.fetchall()
         #print data
         return data[0][0]
-    print "nu är jag här"
+    #print "nu är jag här"
     return None
 
 @app.route('/api/login',methods = ['GET'])
