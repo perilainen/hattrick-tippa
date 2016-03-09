@@ -1,0 +1,33 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    
+    {{test.currentUser.username}}
+	<a href="#/">Hem</a>
+	
+</nav>
+<br>
+<br>
+<br>
+<form name="settings" ng-submit="ChangeSettings()">
+	<div class="form-group">
+        <label>New Password</label>
+        
+        <input type="password" name="password" id="NewPassword1" class="form-control" ng-model="password1" required />
+        <label>Retype Password</label>
+        
+        <input type="password" name="password" id="NewPassword2" class="form-control" ng-model="password2" required />
+        <span ng-show="password1!=password2" class="help-block">Passwords are not the same</span>
+        
+		<label>Old Password</label>
+        
+        <input type="password" name="Oldpassword" id="OldPassword" class="form-control" ng-model="Oldpassword" required />
+        
+        <div class="form-actions">
+        <button type="submit" ng-disabled="settings.$invalid || password1!=password2" class="btn btn-danger">Ändra</button>
+        
+    </div>
+        
+        <!-- <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span> -->
+    </div>
+	
+	
+</form>
