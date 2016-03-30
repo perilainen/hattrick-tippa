@@ -18,6 +18,10 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, static
    	};
 
     $scope.ShowStatistic = function(){
+        staticsService.getPlayerValues().then(function(d){
+        $scope.teamValues = d.data;
+        console.log($scope.teamValues)
+    })
         console.log("Visar statistik")
         ngDialog.open({template: 'modules/home/views/statistik.html', className: 'ngdialog-theme-default',
                   scope:$scope})
@@ -92,11 +96,11 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, static
     	//$scope.mybets.saved[index]=$scope.mybets.bet[index]    	
     };
     $scope.teamValues=[]
-
-    staticsService.getPlayerValues().then(function(d){
+    //Det tar för lång tid att ladda in det
+    /*staticsService.getPlayerValues().then(function(d){
         $scope.teamValues = d.data;
         console.log($scope.teamValues)
-    })
+    })*/
     
     });
 
