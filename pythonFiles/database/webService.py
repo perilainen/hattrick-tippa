@@ -90,18 +90,18 @@ def getTeamValue():
         print teamID
         session = OAuth1Session(consumer_key, consumer_secret, access_token=access_token_key, access_token_secret=access_token_secret)
         r = session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'players', 'version':'2.3', 'teamID':teamID})
-        print r.text
+        #print r.text
         xmldict = xmltodict.parse(r.text)
         jsonfile = json.loads(json.dumps(xmldict))
-        print jsonfile
+        #print jsonfile
         totalvalue = 0
         for i in jsonfile['HattrickData']['Team']['PlayerList']['Player']:
-            print i['PlayerID']
+            #print i['PlayerID']
 
             #playerdetails= session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'playerdetails', 'version':'2.6','actionType':'view', 'playerID':i['PlayerID']})
             transferdetails= session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'transfersplayer', 'version':'1.1','playerID':i['PlayerID']})
             totalvalue += getLastTransfer(transferdetails)
-            print totalvalue
+            #print totalvalue
         jsonitem = {"TeamName": jsonfile['HattrickData']['Team']['TeamName']}
         jsonitem['Truppvarde'] = totalvalue
         teams.append(jsonitem)
