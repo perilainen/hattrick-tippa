@@ -95,21 +95,40 @@ def getTeamValue():
         jsonfile = json.loads(json.dumps(xmldict))
         #print jsonfile
         totalvalue = 0
+        players = 0
+        maxbuy = 0
+        numberOfModerklubb = 0
         for i in jsonfile['HattrickData']['Team']['PlayerList']['Player']:
             #print i['PlayerID']
-
+            players +=1;
             #playerdetails= session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'playerdetails', 'version':'2.6','actionType':'view', 'playerID':i['PlayerID']})
             transferdetails= session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'transfersplayer', 'version':'1.1','playerID':i['PlayerID']})
             totalvalue += getLastTransfer(transferdetails)
+            maxbuy = max (getLastTransfer(transferdetails),maxbuy)
+            if isPlayerNotTransfered(transferdetails):
+                numberOfModerklubb +=1
             #print totalvalue
         jsonitem = {"TeamName": jsonfile['HattrickData']['Team']['TeamName']}
         jsonitem['Truppvarde'] = totalvalue
+        jsonitem['Players'] = players
+        jsonitem['MaxBuy'] = maxbuy
+        jsonitem['AntalModerklubbsspelare'] = numberOfModerklubb
+
         teams.append(jsonitem)
         returnstring +=  jsonfile['HattrickData']['Team']['TeamName']+":"+str(totalvalue)+"\n"
     #return Response(returnstring,status=200)
     resp = Response(json.dumps(teams), status=200,mimetype='application/json')
     return resp
+def isPlayerNotTransfered(transferdetails):
+    xmldict = xmltodict.parse(transferdetails.text)
 
+    jsonfile = json.loads(json.dumps(xmldict))
+
+    transfers = jsonfile['HattrickData']['Transfers']
+
+    if 'Transfer' in transfers:
+        return False
+    return True
 
 
 def getLastTransfer(transferdetails):
@@ -126,7 +145,7 @@ def getLastTransfer(transferdetails):
         if type(transfer) is list:
             value = int(transfer[0]['Price'])
         else:
-            print transfer
+
             value = int(transfer['Price'])
     return value
         #print type(transfers['Transfer'])

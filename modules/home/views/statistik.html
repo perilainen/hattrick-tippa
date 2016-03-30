@@ -1,11 +1,18 @@
+
+
 <table class= "table table-condensed tabbel" >
 		<tr>
-			<th>lag</th>
-			<th>Investerade Pengar i spelare</th>
+			<th ng-click="changeSortStatistics('TeamName')">lag</th>
+			<th ng-click="changeSortStatistics('Truppvarde')">Investerade Pengar i spelare</th>
+			<th ng-click="changeSortStatistics('AntalModerklubbsspelare')">Antal Moderklubbsspelare</th>
+			<th ng-click="changeSortStatistics('Players')">Antal spelare</th>
+			<th ng-click="changeSortStatistics('MaxBuy')">Högsta inköp (kvar i truppen)</th>
 			
 		</tr>
-		<tr ng-repeat="data in teamValues | orderBy:'-Truppvarde'">
+		<tr ng-repeat="data in teamValues | orderBy:sortStatistics:sortStatisticsReverse">
 			<td>{{data.TeamName}}</td>
-			<td>{{data.Truppvarde}}</td>
-			
+			<td>{{data.Truppvarde | number:0}}</td>
+			<td>{{data.AntalModerklubbsspelare}}</td>
+			<td>{{data.Players}}</td>
+			<td>{{data.MaxBuy | number:0}}</td>
 	</table>

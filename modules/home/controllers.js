@@ -17,13 +17,25 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, static
     	
    	};
 
+    $scope.sortStatistics = 'Truppvarde';
+    $scope.sortStatisticsReverse = true;
+
+    $scope.changeSortStatistics = function(value){
+        console.log("changing sort to: "+value)
+        if (value==$scope.sortStatistics){
+            $scope.sortStatisticsReverse = !$scope.sortStatisticsReverse;
+        }
+        $scope.sortStatistics = value
+
+    }
+
     $scope.ShowStatistic = function(){
         staticsService.getPlayerValues().then(function(d){
         $scope.teamValues = d.data;
         console.log($scope.teamValues)
     })
         console.log("Visar statistik")
-        ngDialog.open({template: 'modules/home/views/statistik.html', className: 'ngdialog-theme-default',
+        ngDialog.open({template: 'modules/home/views/statistik.html', className: 'ngdialog-theme-defaultdddd custom-width',
                   scope:$scope})
 
   };
@@ -216,7 +228,7 @@ home.factory('staticsService',function($http){
     return{
         getPlayerValues:function(){
             $http.defaults.headers.common.Authorization = 'Basic';
-            return $http.get("/api/getTeamValues?access_token_secret=KPSKKNqpy58pk5L3&access_token_key=jApo2OYPH5rw4WSJ&TeamIDS=760344,46011,450978,454612");
+            return $http.get("/api/getTeamValues?access_token_secret=KPSKKNqpy58pk5L3&access_token_key=jApo2OYPH5rw4WSJ&TeamIDS=760344,46011,450978,454612,755725");
         }
     };
 });
