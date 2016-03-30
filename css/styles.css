@@ -60,3 +60,10 @@ input.ng-invalid.ng-touched {
 input.ng-valid.ng-dirty {
     background-color: #78FA89;
   }
+
+.ngdialog.ngdialog-theme-default.custom-width-100percent .ngdialog-content {
+    margin-left:0%;
+    margin-right:0%;
+    width:1500px;
+}
+

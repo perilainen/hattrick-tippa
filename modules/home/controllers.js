@@ -35,7 +35,7 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, static
         console.log($scope.teamValues)
     })
         console.log("Visar statistik")
-        ngDialog.open({template: 'modules/home/views/statistik.html', className: 'ngdialog-theme-defaultdddd custom-width',
+        ngDialog.open({template: 'modules/home/views/statistik.html', className: 'ngdialog-theme-default custom-width-100percent',
                   scope:$scope})
 
   };
