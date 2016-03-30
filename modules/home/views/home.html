@@ -6,6 +6,7 @@
     <a ng-click="scrollTo('MinaBets')">Mina bets</a>
 	<a href="#/login">Logout</a>
 	<a href="#/settings">Inställningar</a>
+	<a ng-click="ShowStatistic()" ng-show = "checkStatiticsExist()" >Statistik</a>
 </nav>
 
 <br>
@@ -19,9 +20,9 @@
 
 
 
-<div class ="col-xs-offset-2 col-xs-4 tabbel" id="tabell">
+<div class ="col-xs-offset-2 col-xs-4"  ng-click="show=!show" id="tabell">
 	<h2>Tabell</h2>
-	<table class= "table table-condensed">
+	<table class= "table table-condensed tabbel" ng-show="show">
 		<tr>
 			<th>Spelare</th>
 			<th>Rätt resultat</th>

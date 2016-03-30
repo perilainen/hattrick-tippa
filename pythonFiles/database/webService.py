@@ -75,6 +75,64 @@ def crossdomain(origin=None, methods=None, headers=None,
     return decorator
 
 
+@app.route('/api/getTeamValues', methods=['GET','OPTIONS'])
+@crossdomain(origin='*',headers='autorizations')
+def getTeamValue():
+    access_token_key= request.args.get('access_token_key')
+    access_token_secret = request.args.get('access_token_secret')
+    consumer_key = settings.consumer_key
+    consumer_secret = settings.consumer_secret
+    teamIDS = request.args.get('TeamIDS').split(',')
+    print teamIDS
+    teams = []
+    returnstring = ""
+    for teamID in teamIDS:
+        print teamID
+        session = OAuth1Session(consumer_key, consumer_secret, access_token=access_token_key, access_token_secret=access_token_secret)
+        r = session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'players', 'version':'2.3', 'teamID':teamID})
+        print r.text
+        xmldict = xmltodict.parse(r.text)
+        jsonfile = json.loads(json.dumps(xmldict))
+        print jsonfile
+        totalvalue = 0
+        for i in jsonfile['HattrickData']['Team']['PlayerList']['Player']:
+            print i['PlayerID']
+
+            #playerdetails= session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'playerdetails', 'version':'2.6','actionType':'view', 'playerID':i['PlayerID']})
+            transferdetails= session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'transfersplayer', 'version':'1.1','playerID':i['PlayerID']})
+            totalvalue += getLastTransfer(transferdetails)
+            print totalvalue
+        jsonitem = {"TeamName": jsonfile['HattrickData']['Team']['TeamName']}
+        jsonitem['Truppvarde'] = totalvalue
+        teams.append(jsonitem)
+        returnstring +=  jsonfile['HattrickData']['Team']['TeamName']+":"+str(totalvalue)+"\n"
+    #return Response(returnstring,status=200)
+    resp = Response(json.dumps(teams), status=200,mimetype='application/json')
+    return resp
+
+
+
+def getLastTransfer(transferdetails):
+    #print transferdetails.text
+    xmldict = xmltodict.parse(transferdetails.text)
+
+    jsonfile = json.loads(json.dumps(xmldict))
+
+    transfers = jsonfile['HattrickData']['Transfers']
+    value = 0
+    if 'Transfer' in transfers:
+        #print transfers
+        transfer = transfers['Transfer']
+        if type(transfer) is list:
+            value = int(transfer[0]['Price'])
+        else:
+            print transfer
+            value = int(transfer['Price'])
+    return value
+        #print type(transfers['Transfer'])
+        #print "test" + str(len(transfers['Transfer']))
+        #print jsonfile['HattrickData']['Transfers']['Transfer'][0]['Price']
+
 
 @app.route('/api/getResultsFromHattrick', methods=['GET','OPTIONS'])
 @crossdomain(origin='*',headers='autorizations')

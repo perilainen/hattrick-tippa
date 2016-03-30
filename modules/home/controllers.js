@@ -2,9 +2,9 @@
 
 var home = angular.module('Home',[])
 
-home.controller('HomeController',function ($scope, $cookieStore, $window, dataService,matchService,betService,myBetService,changePassword, $http,$location,$anchorScroll) {
+home.controller('HomeController',function ($scope, $cookieStore, $window, staticsService, dataService,matchService,betService,myBetService,changePassword, $http,$location,$anchorScroll,ngDialog) {
 	
-	
+	$scope.show = true;
 	
     	
     $scope.scrollTo = function(id) {
@@ -16,6 +16,24 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, dataSe
     	$location.hash(old);
     	
    	};
+
+    $scope.ShowStatistic = function(){
+        console.log("Visar statistik")
+        ngDialog.open({template: 'modules/home/views/statistik.html', className: 'ngdialog-theme-default',
+                  scope:$scope})
+
+  };
+    
+
+    $scope.checkStatiticsExist = function(){
+        if ($scope.teamValues.length>0){
+      return true
+    }
+    else{
+      return false
+    }
+    }
+
    	
     	
 	$scope.test = $cookieStore.get('globals')
@@ -73,8 +91,15 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, dataSe
     	$http.put("/api/placeBet/"+this.test.currentUser.username+"/"+this.test.currentUser.password+"/"+this.mybets[index].MatchId+"/"+this.mybets[index].bet+"?comment="+this.mybets[index].comment )
     	//$scope.mybets.saved[index]=$scope.mybets.bet[index]    	
     };
+    $scope.teamValues=[]
+
+    staticsService.getPlayerValues().then(function(d){
+        $scope.teamValues = d.data;
+        console.log($scope.teamValues)
+    })
     
     });
+
     
 
 home.factory('Base64', function() {
@@ -181,6 +206,15 @@ home.factory('dataService', function($http,Base64){
 		return $http.get("/api/table");
 		}
 	};	
+});
+
+home.factory('staticsService',function($http){
+    return{
+        getPlayerValues:function(){
+            $http.defaults.headers.common.Authorization = 'Basic';
+            return $http.get("/api/getTeamValues?access_token_secret=KPSKKNqpy58pk5L3&access_token_key=jApo2OYPH5rw4WSJ&TeamIDS=760344,46011,450978,454612");
+        }
+    };
 });
 
 home.factory('matchService', function($http){

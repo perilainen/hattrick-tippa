@@ -11,6 +11,7 @@ angular.module('BasicHttpAuthExample', [
     'Home',
     'ngRoute',
     'ngCookies',
+    'ngDialog'
   
     
 ])
