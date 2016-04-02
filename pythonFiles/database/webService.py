@@ -21,7 +21,7 @@ import logging
 import xmltodict
 from time import strftime,localtime
 
-import schedule
+#import schedule
 
 
 from flask import make_response, request, current_app, jsonify
