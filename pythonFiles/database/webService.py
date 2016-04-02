@@ -116,6 +116,8 @@ def getTeamValue():
         players = 0
         maxbuy = 0
         numberOfModerklubb = 0
+        totalTSI = 0
+        salary= 0
         for i in jsonfile['HattrickData']['Team']['PlayerList']['Player']:
             #print i['PlayerID']
             players +=1;
@@ -123,6 +125,8 @@ def getTeamValue():
             transferdetails= session.get('http://chpp.hattrick.org/chppxml.ashx', params={'file': 'transfersplayer', 'version':'1.1','playerID':i['PlayerID']})
             totalvalue += getLastTransfer(transferdetails)
             maxbuy = max (getLastTransfer(transferdetails),maxbuy)
+            totalTSI += int(i['TSI'])
+            salary += int(i['Salary'])
             if isPlayerNotTransfered(transferdetails):
                 numberOfModerklubb +=1
             #print totalvalue
@@ -131,6 +135,8 @@ def getTeamValue():
         jsonitem['Players'] = players
         jsonitem['MaxBuy'] = maxbuy
         jsonitem['AntalModerklubbsspelare'] = numberOfModerklubb
+        jsonitem['TotalTSI'] = totalTSI
+        jsonitem['Salary']= salary
         #print teams
         teams['Team'].append(jsonitem)
 
