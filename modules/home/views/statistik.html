@@ -7,6 +7,8 @@
 			<th ng-click="changeSortStatistics('AntalModerklubbsspelare')">Antal Moderklubbsspelare</th>
 			<th ng-click="changeSortStatistics('Players')">Antal spelare</th>
 			<th ng-click="changeSortStatistics('MaxBuy')">Högsta inköp (kvar i truppen)</th>
+			<th ng-click="changeSortStatistics('TotalTSI')">Total TSI</th>
+			<th ng-click="changeSortStatistics('Salary')">Total Lön</th>
 			
 		</tr>
 		<tr ng-repeat="data in teamValues | orderBy:sortStatistics:sortStatisticsReverse">
@@ -15,6 +17,8 @@
 			<td>{{data.AntalModerklubbsspelare}}</td>
 			<td>{{data.Players}}</td>
 			<td>{{data.MaxBuy | number:0}}</td>
+			<td>{{data.TotalTSI | number:0}}</td>
+			<td>{{data.Salary | number:0}}</td>
 	</table>
 <button></button>
 	Data hämtad från hattrick: {{updateTime}} <button ng-click="reloadStatistic()">Hämta nytt data</button>
