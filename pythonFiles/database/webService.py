@@ -19,6 +19,9 @@ from rauth.oauth import HmacSha1Signature
 import json
 import logging
 import xmltodict
+from time import strftime,localtime
+
+import schedule
 
 
 from flask import make_response, request, current_app, jsonify
@@ -28,9 +31,11 @@ from functools import update_wrapper
 from flask_httpauth import HTTPBasicAuth
 auth = HTTPBasicAuth()
 
-
+DATA_FILE= 'data.txt'
 
 LOCK_OFFSET = datetime.timedelta(days=1)
+
+
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -74,6 +79,11 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
+@app.route('/api/getTeamFile', methods=['GET','OPTIONS'])
+@crossdomain(origin='*',headers='autorizations')
+def getTeamsFile():
+    return open(DATA_FILE).read()
+
 
 @app.route('/api/getTeamValues', methods=['GET','OPTIONS'])
 @crossdomain(origin='*',headers='autorizations')
@@ -84,8 +94,16 @@ def getTeamValue():
     consumer_secret = settings.consumer_secret
     teamIDS = request.args.get('TeamIDS').split(',')
     print teamIDS
-    teams = []
-    returnstring = ""
+    teams = {}
+
+    teams['Team'] = []
+    date= strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+    teams['LastUpdate']= date
+    #t ={"Team":[]}
+    #teams.append(t)
+    #print teams
+
     for teamID in teamIDS:
         print teamID
         session = OAuth1Session(consumer_key, consumer_secret, access_token=access_token_key, access_token_secret=access_token_secret)
@@ -113,11 +131,15 @@ def getTeamValue():
         jsonitem['Players'] = players
         jsonitem['MaxBuy'] = maxbuy
         jsonitem['AntalModerklubbsspelare'] = numberOfModerklubb
+        #print teams
+        teams['Team'].append(jsonitem)
 
-        teams.append(jsonitem)
-        returnstring +=  jsonfile['HattrickData']['Team']['TeamName']+":"+str(totalvalue)+"\n"
     #return Response(returnstring,status=200)
     resp = Response(json.dumps(teams), status=200,mimetype='application/json')
+    with open(DATA_FILE, 'w') as outfile:
+        json.dump(teams, outfile)
+
+
     return resp
 def isPlayerNotTransfered(transferdetails):
     xmldict = xmltodict.parse(transferdetails.text)

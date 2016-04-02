@@ -29,9 +29,11 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, static
 
     }
 
-    $scope.ShowStatistic = function(){
-        staticsService.getPlayerValues().then(function(d){
-        $scope.teamValues = d.data;
+    $scope.ShowStatistic = function(clean){
+        staticsService.getPlayerValues(clean).then(function(d){
+        $scope.teamValues = d.data['Team'];
+        $scope.updateTime = d.data['LastUpdate']
+        console.log(d.json)
         console.log($scope.teamValues)
     })
         console.log("Visar statistik")
@@ -39,6 +41,13 @@ home.controller('HomeController',function ($scope, $cookieStore, $window, static
                   scope:$scope})
 
   };
+  $scope.reloadStatistic = function(){
+    $scope.teamValues = []
+        $scope.updateTime = []
+    staticsService.getPlayerValues(true).then(function(d){
+        $scope.teamValues = d.data['Team'];
+        $scope.updateTime = d.data['LastUpdate']
+  })}
     
 
     $scope.checkStatiticsExist = function(){
@@ -226,9 +235,15 @@ home.factory('dataService', function($http,Base64){
 
 home.factory('staticsService',function($http){
     return{
-        getPlayerValues:function(){
+        getPlayerValues:function(clean){
+            if(clean){
             $http.defaults.headers.common.Authorization = 'Basic';
-            return $http.get("/api/getTeamValues?access_token_secret=KPSKKNqpy58pk5L3&access_token_key=jApo2OYPH5rw4WSJ&TeamIDS=760344,46011,450978,454612,755725");
+            return $http.get("/api/getTeamValues?access_token_secret=KPSKKNqpy58pk5L3&access_token_key=jApo2OYPH5rw4WSJ&TeamIDS=760344,46011,450978,454612,755725,14912,12535,43522,763287");
+        }
+        else{
+         $http.defaults.headers.common.Authorization = 'Basic';
+            return $http.get("/api/getTeamFile");   
+        }
         }
     };
 });
