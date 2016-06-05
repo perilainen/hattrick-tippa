@@ -8,6 +8,9 @@ conn = sqlite3.connect(databasesetting.db_path)
 
 
 cursor = conn.cursor()
+
+cursor.execute("""DROP TABLE matches;""")
+
 with open("../matches.json") as data_file:
     data = json.load(data_file)
 
