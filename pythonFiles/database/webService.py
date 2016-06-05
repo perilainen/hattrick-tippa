@@ -33,7 +33,7 @@ auth = HTTPBasicAuth()
 
 DATA_FILE= 'data.txt'
 
-LOCK_OFFSET = datetime.timedelta(days=1)
+LOCK_OFFSET = datetime.timedelta(days=0)
 
 
 
