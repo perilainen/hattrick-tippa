@@ -616,7 +616,7 @@ def placeBet(user,password,matchID,result):
 def isMatchPlayed(matchID):
     matches = getPlayedMatches()
     matchids= []
-    if len(matches)>0:
+    if len(matches)>2:
         for match in matches:
             matchids.append(int(match[0]))
     return int(matchID) in matchids
