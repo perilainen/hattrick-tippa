@@ -52,12 +52,14 @@ comment TEXT);"""
 
 curr.execute(sql_command)
 
-sql_command = """ SELECT user from users"""
+sql_command = ''' SELECT user from users'''
 
 users = curr.execute(sql_command)
-##print ddd.fetchall()
+allusers = users.fetchall()
+print users
+print allusers
 
-for user in users:
+for user in allusers:
     print user
     sql_command = '''SELECT matchID from matches'''
 
