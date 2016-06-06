@@ -36,7 +36,7 @@ for i in data['HattrickData']['Match']:
     params = (str(i['MatchID']),(i['HomeTeam']['HomeTeamName']),(i['AwayTeam']['AwayTeamName']),str(i['MatchDate']),str(i['MatchRound']))
 
     curr.execute(sql_command,params)
-conn.commit()
+#conn.commit()
 
 
 
@@ -52,7 +52,7 @@ comment TEXT);"""
 
 curr.execute(sql_command)
 
-sql_command = ''' SELECT user from users'''
+sql_command = '''SELECT user from users'''
 
 users = curr.execute(sql_command)
 allusers = users.fetchall()
@@ -60,16 +60,17 @@ print users
 print allusers
 
 for user in allusers:
-    print user
+    curruser = user[0]
     sql_command = '''SELECT matchID from matches'''
 
     resp = conn.execute(sql_command)
     allMatches = resp.fetchall()
 
     for match in allMatches:
+
         currmatch = match[0]
         sql_command = '''INSERT INTO results (user,matchID,result) VALUES (?,?,NULL)'''
-        params = ([user,currmatch])
+        params = ([curruser,currmatch])
         curr.execute(sql_command,params)
 
 
