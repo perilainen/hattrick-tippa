@@ -11,8 +11,6 @@ curr.execute("""DROP TABLE matches;""")
 
 sql_command = """
 CREATE TABLE matches (
-serieID VARCHAR(20),
-season VARCHAR(20),
 matchID VARCHAR(20),
 homeTeam VARCHAR(50),
 AwayTeam VARCHAR(50),
