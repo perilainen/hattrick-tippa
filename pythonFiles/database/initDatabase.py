@@ -3,8 +3,10 @@ import databasesetting
 import os.path
 
 
-
+conn = sqlite3.connect(databasesetting.db_path)
+curr = conn.cursor()
 curr.execute("""DROP TABLE matches;""")
+
 
 
 sql_command = """
@@ -17,14 +19,14 @@ result VARCHAR(20),
 MatchRound VARCHAR(20));"""
 
 curr.execute(sql_command)
-curr.execute("""DROP TABLE users;""")
+#curr.execute("""DROP TABLE users;""")
 
 
-sql_command ="""
-CREATE TABLE users (
-user VARCHAR(20),
-password VARCHAR(20));"""
-curr.execute(sql_command)
+#sql_command ="""
+#CREATE TABLE users (
+#user VARCHAR(20),
+#password VARCHAR(20));"""
+#curr.execute(sql_command)
 
 curr.execute("""DROP TABLE results;""")
 

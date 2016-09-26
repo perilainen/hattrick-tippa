@@ -11,7 +11,7 @@ cursor = conn.cursor()
 
 #cursor.execute("""DROP TABLE matches;""")
 
-with open("../matches.json") as data_file:
+with open("../matches2.json") as data_file:
     data = json.load(data_file)
 
 print data
